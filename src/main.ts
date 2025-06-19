@@ -18,7 +18,9 @@ const dateCountdownViewPlugin = ViewPlugin.fromClass(
     }
 
     update(update: ViewUpdate) {
-      this.decorations = this.buildDecorations(update.view);
+      if (update.docChanged) {
+        this.decorations = this.buildDecorations(update.view);
+      }
     }
 
     buildDecorations(view: EditorView): DecorationSet {
