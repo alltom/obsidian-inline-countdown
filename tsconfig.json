@@ -1,24 +1,16 @@
 {
+  "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
-    "baseUrl": ".",
-    "inlineSourceMap": true,
-    "inlineSources": true,
-    "module": "ESNext",
+    "rootDir": ".",
+    "outDir": "build",
+    "lib": ["DOM", "ES6", "ES7"],
     "target": "ES6",
-    "allowJs": true,
-    "noImplicitAny": true,
+    "module": "ESNext",
     "moduleResolution": "node",
-    "importHelpers": true,
-    "isolatedModules": true,
-    "strictNullChecks": true,
-    "lib": [
-      "DOM",
-      "ES5",
-      "ES6",
-      "ES7"
-    ]
+    "isolatedModules": true
   },
   "include": [
-    "**/*.ts"
+    "src/**/*.ts",
+    "test/**/*.ts"
   ]
 }

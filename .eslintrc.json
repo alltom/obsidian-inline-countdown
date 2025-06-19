@@ -1,0 +1,8 @@
+{
+  "extends": "./node_modules/gts/",
+  "rules": {
+    // Allow importing 'obsidian' even though it's in devDependencies
+    // (it's provided by the Obsidian runtime environment)
+    "n/no-unpublished-import": ["error", { "allowModules": ["obsidian"] }]
+  }
+}

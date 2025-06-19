@@ -1,6 +1,7 @@
 import esbuild from "esbuild";
 import process from "process";
 import builtins from "builtin-modules";
+import { copyFile, mkdir } from "fs/promises";
 
 const banner =
 `/*
@@ -11,11 +12,23 @@ if you want to view the source, please visit the github repository of this plugi
 
 const prod = (process.argv[2] === "production");
 
+// Plugin to copy files to build directory
+const copyPlugin = {
+	name: 'copy-files',
+	setup(build) {
+		build.onEnd(async () => {
+			await mkdir('build', { recursive: true });
+			await copyFile('src/manifest.json', 'build/manifest.json');
+			await copyFile('src/styles.css', 'build/styles.css');
+		});
+	},
+};
+
 const context = await esbuild.context({
 	banner: {
 		js: banner,
 	},
-	entryPoints: ["main.ts"],
+	entryPoints: ["src/main.ts"],
 	bundle: true,
 	external: [
 		"obsidian",
@@ -37,8 +50,9 @@ const context = await esbuild.context({
 	logLevel: "info",
 	sourcemap: prod ? false : "inline",
 	treeShaking: true,
-	outfile: "main.js",
+	outfile: "build/main.js",
 	minify: prod,
+	plugins: [copyPlugin],
 });
 
 if (prod) {
