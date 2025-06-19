@@ -14,49 +14,70 @@ const dateCountdownViewPlugin = ViewPlugin.fromClass(
     decorations: DecorationSet;
 
     constructor(view: EditorView) {
-      this.decorations = this.buildDecorations(view);
+      this.decorations = this.reconcileDecorations(view, Decoration.none);
     }
 
     update(update: ViewUpdate) {
       if (update.docChanged) {
-        this.decorations = this.buildDecorations(update.view);
+        this.decorations = this.decorations.map(update.changes);
+        this.decorations = this.reconcileDecorations(
+          update.view,
+          this.decorations,
+        );
       }
     }
 
-    buildDecorations(view: EditorView): DecorationSet {
+    reconcileDecorations(
+      view: EditorView,
+      existingDecorations: DecorationSet,
+    ): DecorationSet {
+      const existingDecorationsMap = new Map();
+      existingDecorations.between(
+        0,
+        view.state.doc.length,
+        (from, to, value) => {
+          existingDecorationsMap.set(to, value);
+        },
+      );
+
       const doc = view.state.doc;
       const text = doc.toString();
       const regex = /\[\[(\d{4}-\d{2}-\d{2})(?:\|[^\]]+)?\]\]/g;
-      const decorations = [];
+      const finalDecorations = [];
       let match;
 
       while ((match = regex.exec(text)) !== null) {
-        const to = match.index + match[0].length;
+        const pos = match.index + match[0].length;
 
-        const dateStr = match[1];
-        if (!dateStr) continue;
-        // Parse as local timezone by splitting the date parts
-        const [year, month, day] = dateStr.split('-').map(Number);
-        if (!year || !month || !day) continue;
-        const targetDate = new Date(year, month - 1, day); // month is 0-indexed
-        const now = new Date();
-        const durationText = formatSemanticDuration(targetDate, now);
+        if (existingDecorationsMap.has(pos)) {
+          finalDecorations.push(existingDecorationsMap.get(pos).range(pos));
+          existingDecorationsMap.delete(pos);
+        } else {
+          // Only do date math if we need to create new decoration
+          const dateStr = match[1];
+          if (!dateStr) continue;
+          const [year, month, day] = dateStr.split('-').map(Number);
+          if (!year || !month || !day) continue;
 
-        const widget = Decoration.widget({
-          widget: new (class extends WidgetType {
-            toDOM() {
-              const span = document.createElement('span');
-              span.textContent = ` (${durationText})`;
-              span.className = 'inline-countdown';
-              return span;
-            }
-          })(),
-        });
+          const targetDate = new Date(year, month - 1, day);
+          const now = new Date();
+          const durationText = formatSemanticDuration(targetDate, now);
 
-        decorations.push(widget.range(to));
+          const widget = Decoration.widget({
+            widget: new (class extends WidgetType {
+              toDOM() {
+                const span = document.createElement('span');
+                span.textContent = ` (${durationText})`;
+                span.className = 'inline-countdown';
+                return span;
+              }
+            })(),
+          });
+          finalDecorations.push(widget.range(pos));
+        }
       }
 
-      return Decoration.set(decorations);
+      return Decoration.set(finalDecorations);
     }
   },
   {
