@@ -33,7 +33,7 @@ const dateCountdownViewPlugin = ViewPlugin.fromClass(class {
 				widget: new (class extends WidgetType {
 					toDOM() {
 						const span = document.createElement('span');
-						span.textContent = ` (${diffDays} days)`;
+						span.textContent = diffDays === 0 ? ` (today)` : ` (${diffDays} days)`;
 						span.className = 'inline-countdown';
 						return span;
 					}
