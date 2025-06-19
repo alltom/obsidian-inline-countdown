@@ -7,6 +7,7 @@ import {
   DecorationSet,
   WidgetType,
 } from '@codemirror/view';
+import {formatSemanticDuration} from './dateFormat';
 
 const dateCountdownViewPlugin = ViewPlugin.fromClass(
   class {
@@ -32,19 +33,18 @@ const dateCountdownViewPlugin = ViewPlugin.fromClass(
 
         const dateStr = match[1];
         if (!dateStr) continue;
-        const targetDate = new Date(dateStr);
+        // Parse as local timezone by splitting the date parts
+        const [year, month, day] = dateStr.split('-').map(Number);
+        if (!year || !month || !day) continue;
+        const targetDate = new Date(year, month - 1, day); // month is 0-indexed
         const now = new Date();
-        const diffTime = targetDate.getTime() - now.getTime();
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const durationText = formatSemanticDuration(targetDate, now);
 
         const widget = Decoration.widget({
           widget: new (class extends WidgetType {
             toDOM() {
               const span = document.createElement('span');
-              span.textContent =
-                diffDays === 0
-                  ? ' (today)'
-                  : ` (${diffDays} ${diffDays === 1 ? 'day' : 'days'})`;
+              span.textContent = ` (${durationText})`;
               span.className = 'inline-countdown';
               return span;
             }

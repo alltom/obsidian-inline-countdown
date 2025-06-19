@@ -12,6 +12,7 @@
     "compile": "tsc",
     "fix": "gts fix",
     "prepare": "npm run compile",
+    "test": "node --test build/test/*.test.js",
     "pretest": "npm run compile",
     "posttest": "npm run lint"
   },
