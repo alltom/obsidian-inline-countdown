@@ -31,6 +31,7 @@ const dateCountdownViewPlugin = ViewPlugin.fromClass(
         const to = match.index + match[0].length;
 
         const dateStr = match[1];
+        if (!dateStr) continue;
         const targetDate = new Date(dateStr);
         const now = new Date();
         const diffTime = targetDate.getTime() - now.getTime();
@@ -62,9 +63,9 @@ const dateCountdownViewPlugin = ViewPlugin.fromClass(
 );
 
 export default class InlineCountdownPlugin extends Plugin {
-  async onload() {
+  override async onload() {
     this.registerEditorExtension(dateCountdownViewPlugin);
   }
 
-  onunload() {}
+  override onunload() {}
 }
