@@ -14,7 +14,8 @@
     "prepare": "npm run compile",
     "test": "node --test build/test/*.test.js",
     "pretest": "npm run compile",
-    "posttest": "npm run lint"
+    "posttest": "npm run lint",
+    "package": "npm run build && cd build && zip -r obsidian-inline-countdown.zip main.js manifest.json styles.css"
   },
   "keywords": [],
   "author": "Tom Lieber <tom@alltom.com>",

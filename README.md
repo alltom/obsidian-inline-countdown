@@ -21,5 +21,12 @@ Examples:
 - Clone this repo
 - `npm install` to install dependencies  
 - `npm run dev` to start compilation in watch mode
+- `npm run test` to run tests (compiles first, then runs tests and linting)
+- `npm run lint` to check code style
+- `npm run fix` to auto-fix linting issues
 - Copy or symlink `main.js`, `styles.css`, and `manifest.json` to your vault's plugins folder
 - Reload Obsidian to see changes
+
+## Distribution
+
+Run `npm run package` to create `build/obsidian-inline-countdown.zip` containing the three files needed for plugin installation.
