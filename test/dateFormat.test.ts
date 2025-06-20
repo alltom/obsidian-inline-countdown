@@ -1,6 +1,10 @@
 import {test} from 'node:test';
 import {strict as assert} from 'node:assert';
-import {formatSemanticDuration} from '../src/dateFormat';
+import {
+  formatSemanticDuration,
+  classifyDueDate,
+  addOneDay,
+} from '../src/dateFormat';
 
 void test('same day returns today', () => {
   const date = new Date('2024-01-04');
@@ -75,4 +79,65 @@ void test('1 week, 1 day ago: 2025-06-11', () => {
   const current = new Date(2025, 5, 19); // June 19, 2025
   const past = new Date(2025, 5, 11); // June 11, 2025
   assert.equal(formatSemanticDuration(past, current), '←1 week, 1 day');
+});
+
+void test('past due dates are classified as overdue', () => {
+  const dueDate = {year: 2025, month: 6, day: 19};
+  const today = {year: 2025, month: 6, day: 20};
+
+  const status = classifyDueDate(dueDate, today);
+
+  assert.equal(status, 'overdue');
+});
+
+void test('due dates matching today are classified as due', () => {
+  const dueDate = {year: 2025, month: 6, day: 20};
+  const today = {year: 2025, month: 6, day: 20};
+
+  const status = classifyDueDate(dueDate, today);
+
+  assert.equal(status, 'due');
+});
+
+void test('due dates 1 day in future are classified as nearly-due', () => {
+  const dueDate = {year: 2025, month: 6, day: 21};
+  const today = {year: 2025, month: 6, day: 20};
+
+  const status = classifyDueDate(dueDate, today);
+
+  assert.equal(status, 'nearly-due');
+});
+
+void test('due dates 3 days in future are classified as nearly-due', () => {
+  const dueDate = {year: 2025, month: 6, day: 23};
+  const today = {year: 2025, month: 6, day: 20};
+
+  const status = classifyDueDate(dueDate, today);
+
+  assert.equal(status, 'nearly-due');
+});
+
+void test('due dates 4 days in future are classified as future', () => {
+  const dueDate = {year: 2025, month: 6, day: 24};
+  const today = {year: 2025, month: 6, day: 20};
+
+  const status = classifyDueDate(dueDate, today);
+
+  assert.equal(status, 'future');
+});
+
+void test('adding one day advances to next day', () => {
+  const date = {year: 2025, month: 6, day: 20};
+
+  const nextDay = addOneDay(date);
+
+  assert.deepEqual(nextDay, {year: 2025, month: 6, day: 21});
+});
+
+void test('adding one day crosses month boundary correctly', () => {
+  const lastDayOfMonth = {year: 2025, month: 6, day: 30};
+
+  const nextDay = addOneDay(lastDayOfMonth);
+
+  assert.deepEqual(nextDay, {year: 2025, month: 7, day: 1});
 });

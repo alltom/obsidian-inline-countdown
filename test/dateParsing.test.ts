@@ -11,6 +11,7 @@ void test('finds wiki-link date format', () => {
     index: 11,
     endIndex: 25,
     dateString: '2025-06-20',
+    isDueDate: false,
   });
 });
 
@@ -23,6 +24,7 @@ void test('finds wiki-link date with alias', () => {
     index: 11,
     endIndex: 34,
     dateString: '2025-06-20',
+    isDueDate: false,
   });
 });
 
@@ -35,6 +37,7 @@ void test('finds Tasks plugin emoji format', () => {
     index: 19,
     endIndex: 32,
     dateString: '2025-06-20',
+    isDueDate: true,
   });
 });
 
@@ -47,6 +50,7 @@ void test('finds Tasks plugin emoji format with spaces', () => {
     index: 19,
     endIndex: 33,
     dateString: '2025-06-20',
+    isDueDate: true,
   });
 });
 
@@ -59,11 +63,13 @@ void test('finds multiple dates in mixed formats', () => {
     index: 6,
     endIndex: 20,
     dateString: '2025-06-20',
+    isDueDate: false,
   });
   assert.deepEqual(matches[1], {
     index: 32,
     endIndex: 45,
     dateString: '2025-06-25',
+    isDueDate: true,
   });
 });
 

@@ -2,3 +2,17 @@
 	color: #888;
 	font-size: smaller;
 }
+
+.inline-countdown-overdue {
+	color: #e74c3c;
+	font-weight: bold;
+}
+
+.inline-countdown-due {
+	color: #f39c12;
+	font-weight: bold;
+}
+
+.inline-countdown-nearly-due {
+	color: #f1c40f;
+}

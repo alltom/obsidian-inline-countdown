@@ -2,6 +2,7 @@ export interface DateMatch {
   index: number;
   endIndex: number;
   dateString: string;
+  isDueDate: boolean;
 }
 
 export function findDatesInText(text: string): DateMatch[] {
@@ -17,6 +18,7 @@ export function findDatesInText(text: string): DateMatch[] {
         index: match.index,
         endIndex: match.index + match[0].length,
         dateString,
+        isDueDate: !!match[2], // true if emoji format (match[2]), false if wiki-link (match[1])
       });
     }
   }
