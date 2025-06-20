@@ -7,7 +7,8 @@ import {
   DecorationSet,
   WidgetType,
 } from '@codemirror/view';
-import {formatSemanticDuration, dateFromJsDate, classifyDueDate} from './dateFormat';
+import {formatSemanticDuration, classifyDueDate} from './dateFormat';
+import {dateFromJsDate} from './simpleDate';
 import {findDatesInText} from './dateParsing';
 
 const dateCountdownViewPlugin = ViewPlugin.fromClass(
@@ -54,20 +55,13 @@ const dateCountdownViewPlugin = ViewPlugin.fromClass(
           existingDecorationsMap.delete(pos);
         } else {
           // Only do date math if we need to create new decoration
-          const dateStr = dateMatch.dateString;
-          const [year, month, day] = dateStr.split('-').map(Number);
-          if (!year || !month || !day) continue;
-
-          // Unlike new Date('2025-01-01'), this constructor produces a date in the local time zone.
-          const targetDate = new Date(year, month - 1, day);
-          const now = new Date();
+          const targetDate = dateMatch.date;
+          const now = dateFromJsDate(new Date());
           const durationText = formatSemanticDuration(targetDate, now);
 
           let cssClass = 'inline-countdown';
           if (dateMatch.isDueDate) {
-            const today = dateFromJsDate(now);
-            const dueDate = {year, month, day};
-            const status = classifyDueDate(dueDate, today);
+            const status = classifyDueDate(targetDate, now);
             cssClass += ` inline-countdown-${status}`;
           }
 

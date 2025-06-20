@@ -1,28 +1,6 @@
-export interface SimpleDate {
-  year: number;
-  month: number; // 1-based (1 = January)
-  day: number;
-}
+import {SimpleDate, compareDates, addOneDay} from './simpleDate';
 
 export type DueDateStatus = 'overdue' | 'due' | 'nearly-due' | 'future';
-
-export function dateFromJsDate(jsDate: Date): SimpleDate {
-  return {
-    year: jsDate.getFullYear(),
-    month: jsDate.getMonth() + 1, // Convert from 0-based to 1-based
-    day: jsDate.getDate(),
-  };
-}
-
-export function compareDates(date1: SimpleDate, date2: SimpleDate): number {
-  if (date1.year !== date2.year) return date1.year - date2.year;
-  if (date1.month !== date2.month) return date1.month - date2.month;
-  return date1.day - date2.day;
-}
-
-export function addOneDay(date: SimpleDate): SimpleDate {
-  return dateFromJsDate(new Date(date.year, date.month - 1, date.day + 1));
-}
 
 export function classifyDueDate(
   dueDate: SimpleDate,
@@ -46,33 +24,21 @@ export function classifyDueDate(
 }
 
 export function formatSemanticDuration(
-  targetDate: Date,
-  currentDate: Date,
+  targetDate: SimpleDate,
+  currentDate: SimpleDate,
 ): string {
-  // Normalize to midnight for day-based comparisons
-  const normalizedTarget = new Date(
-    targetDate.getFullYear(),
-    targetDate.getMonth(),
-    targetDate.getDate(),
-  );
-  const normalizedCurrent = new Date(
-    currentDate.getFullYear(),
-    currentDate.getMonth(),
-    currentDate.getDate(),
-  );
-
-  const isPast = normalizedTarget < normalizedCurrent;
+  const isPast = compareDates(targetDate, currentDate) < 0;
   const [earlier, later] = isPast
-    ? [normalizedTarget, normalizedCurrent]
-    : [normalizedCurrent, normalizedTarget];
+    ? [targetDate, currentDate]
+    : [currentDate, targetDate];
 
-  let years = later.getFullYear() - earlier.getFullYear();
-  let months = later.getMonth() - earlier.getMonth();
-  let days = later.getDate() - earlier.getDate();
+  let years = later.year - earlier.year;
+  let months = later.month - earlier.month;
+  let days = later.day - earlier.day;
 
   if (days < 0) {
     months--;
-    const lastMonth = new Date(later.getFullYear(), later.getMonth(), 0);
+    const lastMonth = new Date(later.year, later.month - 1, 0);
     days += lastMonth.getDate();
   }
 
