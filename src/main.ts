@@ -8,6 +8,7 @@ import {
   WidgetType,
 } from '@codemirror/view';
 import {formatSemanticDuration} from './dateFormat';
+import {findDatesInText} from './dateParsing';
 
 const dateCountdownViewPlugin = ViewPlugin.fromClass(
   class {
@@ -42,20 +43,18 @@ const dateCountdownViewPlugin = ViewPlugin.fromClass(
 
       const doc = view.state.doc;
       const text = doc.toString();
-      const regex = /\[\[(\d{4}-\d{2}-\d{2})(?:\|[^\]]+)?\]\]/g;
+      const dateMatches = findDatesInText(text);
       const finalDecorations = [];
-      let match;
 
-      while ((match = regex.exec(text)) !== null) {
-        const pos = match.index + match[0].length;
+      for (const dateMatch of dateMatches) {
+        const pos = dateMatch.endIndex;
 
         if (existingDecorationsMap.has(pos)) {
           finalDecorations.push(existingDecorationsMap.get(pos).range(pos));
           existingDecorationsMap.delete(pos);
         } else {
           // Only do date math if we need to create new decoration
-          const dateStr = match[1];
-          if (!dateStr) continue;
+          const dateStr = dateMatch.dateString;
           const [year, month, day] = dateStr.split('-').map(Number);
           if (!year || !month || !day) continue;
 

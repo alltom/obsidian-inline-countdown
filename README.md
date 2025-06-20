@@ -5,15 +5,17 @@ An Obsidian plugin that displays inline countdowns and countups for date links i
 ## Features
 
 - Detects date links in the format `[[YYYY-MM-DD]]`
-- In preview mode, replaces these links with live countdown timers for future dates
+- Detects Tasks plugin due dates in the format `📅 YYYY-MM-DD`
+- In [live preview](https://help.obsidian.md/edit-and-read#Live+Preview), shows live countdown timers for future dates
 - Shows countups for dates in the past
 
 ## Usage
 
-Simply create date links in your notes using the format `[[YYYY-MM-DD]]`. When you switch to preview mode, these links will be augmented with countdown timers showing the time remaining until (or since) that date.
+Create date links in your notes using either format. In live preview, these will show countdown timers displaying the time remaining until (or since) that date.
 
 Examples:
 - `[[2024-12-25]]` - Shows countdown to Christmas, 2025
+- `📅 2025-06-20` - Shows countdown to June 20, 2025
 - `[[2020-01-01]]` - Shows time elapsed since the year 2020 began
 
 ## Development

@@ -1,0 +1,25 @@
+export interface DateMatch {
+  index: number;
+  endIndex: number;
+  dateString: string;
+}
+
+export function findDatesInText(text: string): DateMatch[] {
+  const regex =
+    /(?:\[\[(\d{4}-\d{2}-\d{2})(?:\|[^\]]+)?\]\]|📅\s*(\d{4}-\d{2}-\d{2}))/g;
+  const matches: DateMatch[] = [];
+  let match;
+
+  while ((match = regex.exec(text)) !== null) {
+    const dateString = match[1] || match[2];
+    if (dateString) {
+      matches.push({
+        index: match.index,
+        endIndex: match.index + match[0].length,
+        dateString,
+      });
+    }
+  }
+
+  return matches;
+}
