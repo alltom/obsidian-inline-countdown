@@ -50,33 +50,44 @@ const dateCountdownViewPlugin = ViewPlugin.fromClass(
       for (const dateMatch of dateMatches) {
         const pos = dateMatch.endIndex;
 
-        if (existingDecorationsMap.has(pos)) {
-          finalDecorations.push(existingDecorationsMap.get(pos).range(pos));
-          existingDecorationsMap.delete(pos);
-        } else {
-          // Only do date math if we need to create new decoration
-          const targetDate = dateMatch.date;
-          const now = dateFromJsDate(new Date());
-          const durationText = formatSemanticDuration(targetDate, now);
+        // Calculate what decoration should be
+        const targetDate = dateMatch.date;
+        const now = dateFromJsDate(new Date());
+        const expectedText = ` (${formatSemanticDuration(targetDate, now)})`;
 
+        let decorationToUse;
+
+        if (existingDecorationsMap.has(pos)) {
+          const existingDecoration = existingDecorationsMap.get(pos);
+          const existingWidget = existingDecoration.spec?.widget;
+          const existingElement = existingWidget?.toDOM?.();
+          
+          if (existingElement?.textContent === expectedText) {
+            decorationToUse = existingDecoration;
+          }
+          existingDecorationsMap.delete(pos);
+        }
+
+        if (!decorationToUse) {
           let cssClass = 'inline-countdown';
           if (dateMatch.isDueDate) {
             const status = classifyDueDate(targetDate, now);
             cssClass += ` inline-countdown-${status}`;
           }
 
-          const widget = Decoration.widget({
+          decorationToUse = Decoration.widget({
             widget: new (class extends WidgetType {
               toDOM() {
                 const span = document.createElement('span');
-                span.textContent = ` (${durationText})`;
+                span.textContent = expectedText;
                 span.className = cssClass;
                 return span;
               }
             })(),
           });
-          finalDecorations.push(widget.range(pos));
         }
+
+        finalDecorations.push(decorationToUse.range(pos));
       }
 
       return Decoration.set(finalDecorations);
