@@ -26,8 +26,20 @@ Examples:
 - `npm run test` to run tests (compiles first, then runs tests and linting)
 - `npm run lint` to check code style
 - `npm run fix` to auto-fix linting issues
-- Copy or symlink `main.js`, `styles.css`, and `manifest.json` to your vault's plugins folder
-- Reload Obsidian to see changes
+
+### Local Deployment
+
+To deploy to your Obsidian vault during development:
+
+1. Create a `.env` file with your plugin directory path:
+   ```
+   OBSIDIAN_PLUGIN_PATH=/path/to/your/vault/.obsidian/plugins/obsidian-inline-countdown
+   ```
+2. Run `npm run build` to compile the plugin
+3. Run `npm run deploy_local` to copy files to your vault's plugins directory
+4. Reload Obsidian to see changes
+
+Alternatively, copy or symlink `main.js`, `styles.css`, and `manifest.json` from the `build/` directory to your vault's plugins folder manually.
 
 ## Distribution
 

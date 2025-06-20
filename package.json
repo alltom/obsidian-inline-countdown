@@ -15,7 +15,8 @@
     "test": "node --test build/test/*.test.js",
     "pretest": "npm run compile",
     "posttest": "npm run lint",
-    "package": "npm run build && cd build && zip -r obsidian-inline-countdown.zip main.js manifest.json styles.css"
+    "package": "npm run build && cd build && zip -r obsidian-inline-countdown.zip main.js manifest.json styles.css",
+    "deploy_local": "node scripts/deploy-local.mjs"
   },
   "keywords": [],
   "author": "Tom Lieber <tom@alltom.com>",
@@ -25,6 +26,7 @@
     "@typescript-eslint/eslint-plugin": "5.29.0",
     "@typescript-eslint/parser": "5.29.0",
     "builtin-modules": "3.3.0",
+    "dotenv": "^16.5.0",
     "esbuild": "0.17.3",
     "gts": "^6.0.2",
     "obsidian": "latest",
