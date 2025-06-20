@@ -61,7 +61,7 @@ const dateCountdownViewPlugin = ViewPlugin.fromClass(
           const existingDecoration = existingDecorationsMap.get(pos);
           const existingWidget = existingDecoration.spec?.widget;
           const existingElement = existingWidget?.toDOM?.();
-          
+
           if (existingElement?.textContent === expectedText) {
             decorationToUse = existingDecoration;
           }
