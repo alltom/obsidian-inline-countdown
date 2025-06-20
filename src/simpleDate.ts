@@ -10,7 +10,6 @@ export function parseSimpleDate(dateString: string): SimpleDate | undefined {
   return {year, month, day};
 }
 
-
 export function dateFromJsDate(jsDate: Date): SimpleDate {
   return {
     year: jsDate.getFullYear(),

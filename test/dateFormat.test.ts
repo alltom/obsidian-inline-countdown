@@ -48,34 +48,45 @@ void test('reproduces bug: 1 month should be 1 month', () => {
 });
 
 void test('handles time of day correctly', () => {
-  const current = {year: 2025, month: 6, day: 19}; // SimpleDate ignores time of day
+  const current = {year: 2025, month: 6, day: 19};
   const tomorrow = {year: 2025, month: 6, day: 20};
   assert.equal(formatSemanticDuration(tomorrow, current), '1 day');
 });
 
-// Tests based on user's examples (assuming today is 2025-06-19)
 void test('1 week from now: 2025-06-26', () => {
-  const current = {year: 2025, month: 6, day: 19}; // June 19, 2025
-  const future = {year: 2025, month: 6, day: 26}; // June 26, 2025
-  assert.equal(formatSemanticDuration(future, current), '1 week');
+  const current = {year: 2025, month: 6, day: 19};
+  const future = {year: 2025, month: 6, day: 26};
+
+  const result = formatSemanticDuration(future, current);
+
+  assert.equal(result, '1 week');
 });
 
 void test('1 week, 1 day from now: 2025-06-27', () => {
-  const current = {year: 2025, month: 6, day: 19}; // June 19, 2025
-  const future = {year: 2025, month: 6, day: 27}; // June 27, 2025
-  assert.equal(formatSemanticDuration(future, current), '1 week, 1 day');
+  const current = {year: 2025, month: 6, day: 19};
+  const future = {year: 2025, month: 6, day: 27};
+
+  const result = formatSemanticDuration(future, current);
+
+  assert.equal(result, '1 week, 1 day');
 });
 
 void test('1 week ago: 2025-06-12', () => {
-  const current = {year: 2025, month: 6, day: 19}; // June 19, 2025
-  const past = {year: 2025, month: 6, day: 12}; // June 12, 2025
-  assert.equal(formatSemanticDuration(past, current), '←1 week');
+  const current = {year: 2025, month: 6, day: 19};
+  const past = {year: 2025, month: 6, day: 12};
+
+  const result = formatSemanticDuration(past, current);
+
+  assert.equal(result, '←1 week');
 });
 
 void test('1 week, 1 day ago: 2025-06-11', () => {
-  const current = {year: 2025, month: 6, day: 19}; // June 19, 2025
-  const past = {year: 2025, month: 6, day: 11}; // June 11, 2025
-  assert.equal(formatSemanticDuration(past, current), '←1 week, 1 day');
+  const current = {year: 2025, month: 6, day: 19};
+  const past = {year: 2025, month: 6, day: 11};
+
+  const result = formatSemanticDuration(past, current);
+
+  assert.equal(result, '←1 week, 1 day');
 });
 
 void test('past due dates are classified as overdue', () => {
