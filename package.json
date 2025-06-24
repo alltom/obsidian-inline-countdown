@@ -1,7 +1,7 @@
 {
   "name": "obsidian-inline-countdown",
   "version": "1.0.0",
-  "description": "Displays inline countdowns/countups for date links in preview mode",
+  "description": "Displays inline countdowns/countups for date links in live preview mode",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",

@@ -1,6 +1,6 @@
 # Inline Countdown
 
-An Obsidian plugin that displays inline countdowns and countups for date links in preview mode.
+An Obsidian plugin that displays inline countdowns and countups for date links in live preview mode.
 
 ## Features
 
@@ -14,6 +14,7 @@ An Obsidian plugin that displays inline countdowns and countups for date links i
 Create date links in your notes using either format. In live preview, these will show countdown timers displaying the time remaining until (or since) that date.
 
 Examples:
+
 - `[[2024-12-25]]` - Shows countdown to Christmas, 2025
 - `📅 2025-06-20` - Shows countdown to June 20, 2025
 - `[[2020-01-01]]` - Shows time elapsed since the year 2020 began
@@ -21,7 +22,7 @@ Examples:
 ## Development
 
 - Clone this repo
-- `npm install` to install dependencies  
+- `npm install` to install dependencies
 - `npm run dev` to start compilation in watch mode
 - `npm run test` to run tests (compiles first, then runs tests and linting)
 - `npm run lint` to check code style
