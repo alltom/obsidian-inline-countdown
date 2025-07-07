@@ -10,12 +10,12 @@ export interface DateMatch {
 
 export function findDatesInText(text: string): DateMatch[] {
   const regex =
-    /(?:\[\[(\d{4}-\d{2}-\d{2})(?:\|[^\]]+)?\]\]|📅\s*(\d{4}-\d{2}-\d{2}))/g;
+    /(?:\[\[(\d{4}-\d{2}-\d{2})(?:\|[^\]]+)?\]\]|📅\s*(\d{4}-\d{2}-\d{2})|🛫\s*(\d{4}-\d{2}-\d{2}))/g;
   const matches: DateMatch[] = [];
   let match;
 
   while ((match = regex.exec(text)) !== null) {
-    const dateString = match[1] || match[2];
+    const dateString = match[1] || match[2] || match[3];
     if (dateString) {
       const date = parseSimpleDate(dateString);
       if (date) {
@@ -24,7 +24,7 @@ export function findDatesInText(text: string): DateMatch[] {
           endIndex: match.index + match[0].length,
           dateString,
           date,
-          isDueDate: !!match[2], // true if emoji format (match[2]), false if wiki-link (match[1])
+          isDueDate: !!match[2], // true if 📅 format (match[2]), false if wiki-link (match[1]) or 🛫 format (match[3])
         });
       }
     }
