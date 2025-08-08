@@ -1,5 +1,5 @@
 # vscode
-.vscode 
+.vscode
 
 # Intellij
 *.iml
@@ -21,9 +21,9 @@ data.json
 # Exclude macOS Finder (System Explorer) View States
 .DS_Store
 
-# Claude development notes
+# AI
 CLAUDE.md
-BACKLOG.md
+GEMINI.md
 
 # Environment variables
 .env
