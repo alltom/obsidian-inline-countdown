@@ -47,6 +47,10 @@ export function formatSemanticDuration(
     months += 12;
   }
 
+  if (years === 0 && months === 0 && days === 0) return 'today';
+  if (years === 0 && months === 0 && days === 1)
+    return isPast ? 'yesterday' : 'tomorrow';
+
   const parts: string[] = [];
   if (years > 0) parts.push(`${years} ${years === 1 ? 'year' : 'years'}`);
   if (months > 0) parts.push(`${months} ${months === 1 ? 'month' : 'months'}`);
@@ -63,8 +67,9 @@ export function formatSemanticDuration(
     parts.push(`${days} ${days === 1 ? 'day' : 'days'}`);
   }
 
-  if (parts.length === 0) return 'today';
+  const date = new Date(targetDate.year, targetDate.month - 1, targetDate.day);
+  const dayOfWeek = date.toLocaleDateString('en-US', {weekday: 'short'});
 
   const result = parts.join(', ');
-  return isPast ? `←${result}` : result;
+  return isPast ? `${dayOfWeek}; ←${result}` : `${dayOfWeek}; ${result}`;
 }

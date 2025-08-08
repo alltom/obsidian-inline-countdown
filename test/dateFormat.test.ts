@@ -11,19 +11,19 @@ void test('same day returns today', () => {
 void test('future date shows correct format', () => {
   const current = {year: 2024, month: 1, day: 4};
   const future = {year: 2024, month: 2, day: 4};
-  assert.equal(formatSemanticDuration(future, current), '1 month');
+  assert.equal(formatSemanticDuration(future, current), 'Sun; 1 month');
 });
 
 void test('future date with extra day', () => {
   const current = {year: 2024, month: 1, day: 4};
   const future = {year: 2024, month: 2, day: 5};
-  assert.equal(formatSemanticDuration(future, current), '1 month, 1 day');
+  assert.equal(formatSemanticDuration(future, current), 'Mon; 1 month, 1 day');
 });
 
 void test('past date shows arrow prefix', () => {
   const current = {year: 2024, month: 2, day: 4};
   const past = {year: 2024, month: 1, day: 4};
-  assert.equal(formatSemanticDuration(past, current), '←1 month');
+  assert.equal(formatSemanticDuration(past, current), 'Thu; ←1 month');
 });
 
 void test('handles years correctly', () => {
@@ -31,26 +31,32 @@ void test('handles years correctly', () => {
   const future = {year: 2025, month: 2, day: 5};
   assert.equal(
     formatSemanticDuration(future, current),
-    '1 year, 1 month, 1 day',
+    'Wed; 1 year, 1 month, 1 day',
   );
 });
 
-void test('reproduces bug: tomorrow should show 1 day', () => {
+void test('reproduces bug: tomorrow should be "tomorrow"', () => {
   const current = {year: 2025, month: 6, day: 19};
   const tomorrow = {year: 2025, month: 6, day: 20};
-  assert.equal(formatSemanticDuration(tomorrow, current), '1 day');
+  assert.equal(formatSemanticDuration(tomorrow, current), 'tomorrow');
+});
+
+void test('yesterday should be "yesterday"', () => {
+  const current = {year: 2025, month: 6, day: 19};
+  const yesterday = {year: 2025, month: 6, day: 18};
+  assert.equal(formatSemanticDuration(yesterday, current), 'yesterday');
 });
 
 void test('reproduces bug: 1 month should be 1 month', () => {
   const current = {year: 2025, month: 6, day: 19};
   const future = {year: 2025, month: 7, day: 19};
-  assert.equal(formatSemanticDuration(future, current), '1 month');
+  assert.equal(formatSemanticDuration(future, current), 'Sat; 1 month');
 });
 
 void test('handles time of day correctly', () => {
   const current = {year: 2025, month: 6, day: 19};
   const tomorrow = {year: 2025, month: 6, day: 20};
-  assert.equal(formatSemanticDuration(tomorrow, current), '1 day');
+  assert.equal(formatSemanticDuration(tomorrow, current), 'tomorrow');
 });
 
 void test('1 week from now: 2025-06-26', () => {
@@ -59,7 +65,7 @@ void test('1 week from now: 2025-06-26', () => {
 
   const result = formatSemanticDuration(future, current);
 
-  assert.equal(result, '1 week');
+  assert.equal(result, 'Thu; 1 week');
 });
 
 void test('1 week, 1 day from now: 2025-06-27', () => {
@@ -68,7 +74,7 @@ void test('1 week, 1 day from now: 2025-06-27', () => {
 
   const result = formatSemanticDuration(future, current);
 
-  assert.equal(result, '1 week, 1 day');
+  assert.equal(result, 'Fri; 1 week, 1 day');
 });
 
 void test('1 week ago: 2025-06-12', () => {
@@ -77,7 +83,7 @@ void test('1 week ago: 2025-06-12', () => {
 
   const result = formatSemanticDuration(past, current);
 
-  assert.equal(result, '←1 week');
+  assert.equal(result, 'Thu; ←1 week');
 });
 
 void test('1 week, 1 day ago: 2025-06-11', () => {
@@ -86,7 +92,7 @@ void test('1 week, 1 day ago: 2025-06-11', () => {
 
   const result = formatSemanticDuration(past, current);
 
-  assert.equal(result, '←1 week, 1 day');
+  assert.equal(result, 'Wed; ←1 week, 1 day');
 });
 
 void test('past due dates are classified as overdue', () => {
