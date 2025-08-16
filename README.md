@@ -8,6 +8,7 @@ An Obsidian plugin that displays inline countdowns and countups for date links i
 - Detects Tasks plugin due dates in the format `📅 YYYY-MM-DD`
 - In [live preview](https://help.obsidian.md/edit-and-read#Live+Preview), shows live countdown timers for future dates
 - Shows countups for dates in the past
+- Shows business day countdowns for dates in the near future
 
 ## Usage
 

@@ -163,3 +163,46 @@ void test('dateFromJsDate converts JS Date to SimpleDate', () => {
 
   assert.deepEqual(simpleDate, {year: 2025, month: 6, day: 20});
 });
+
+void test('business day formatting', () => {
+  const monday = {year: 2025, month: 8, day: 18};
+  const tuesday = {year: 2025, month: 8, day: 19};
+  const wednesday = {year: 2025, month: 8, day: 20};
+  const thursday = {year: 2025, month: 8, day: 21};
+  const friday = {year: 2025, month: 8, day: 22};
+  const saturday = {year: 2025, month: 8, day: 23};
+  const sunday = {year: 2025, month: 8, day: 24};
+  const nextMonday = {year: 2025, month: 8, day: 25};
+
+  assert.equal(formatSemanticDuration(tuesday, monday), 'tomorrow', 'Mon–Tue');
+  assert.equal(
+    formatSemanticDuration(wednesday, monday),
+    'Wed; 2 days / 2 BD',
+    'Mon–Wed',
+  );
+  assert.equal(
+    formatSemanticDuration(thursday, monday),
+    'Thu; 3 days / 3 BD',
+    'Mon–Thu',
+  );
+  assert.equal(
+    formatSemanticDuration(friday, monday),
+    'Fri; 4 days / 4 BD',
+    'Mon–Fri',
+  );
+  assert.equal(
+    formatSemanticDuration(saturday, monday),
+    'Sat; 5 days / 4 BD',
+    'Mon–Sat',
+  );
+  assert.equal(
+    formatSemanticDuration(sunday, monday),
+    'Sun; 6 days / 4 BD',
+    'Mon–Sun',
+  );
+  assert.equal(
+    formatSemanticDuration(nextMonday, monday),
+    'Mon; 1 week',
+    'Mon–Mon',
+  );
+});

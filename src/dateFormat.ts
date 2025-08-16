@@ -23,6 +23,29 @@ export function classifyDueDate(
   return 'future';
 }
 
+function countBusinessDays(startDate: SimpleDate, endDate: SimpleDate): number {
+  const currentDate = new Date(
+    startDate.year,
+    startDate.month - 1,
+    startDate.day,
+  );
+  const lastDate = new Date(endDate.year, endDate.month - 1, endDate.day);
+  let businessDays = 0;
+
+  currentDate.setDate(currentDate.getDate() + 1);
+
+  while (currentDate <= lastDate) {
+    const dayOfWeek = currentDate.getDay();
+    if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+      // Monday to Friday
+      businessDays++;
+    }
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return businessDays;
+}
+
 export function formatSemanticDuration(
   targetDate: SimpleDate,
   currentDate: SimpleDate,
@@ -71,5 +94,14 @@ export function formatSemanticDuration(
   const dayOfWeek = date.toLocaleDateString('en-US', {weekday: 'short'});
 
   const result = parts.join(', ');
-  return isPast ? `${dayOfWeek}; ←${result}` : `${dayOfWeek}; ${result}`;
+  let finalResult = isPast
+    ? `${dayOfWeek}; ←${result}`
+    : `${dayOfWeek}; ${result}`;
+
+  if (!isPast && years === 0 && months === 0 && days > 0 && days < 7) {
+    const businessDays = countBusinessDays(currentDate, targetDate);
+    finalResult += ` / ${businessDays} BD`;
+  }
+
+  return finalResult;
 }
